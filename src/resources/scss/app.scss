@@ -1,4 +1,22 @@
 @import "variables";
-h1 {
-  color: $red-color;
+.card-course-item {
+    margin-top: 16px;
+}
+.checkbox-select-all-options {
+    width: 170px;
+    margin: 0 16px;
+}
+.sort-icon {
+    color: black;
+    font-size: 20px;
+    text-decoration: none;
+}
+.paginate {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.container-form {
+    min-height: 500px;
 }

@@ -1,0 +1,176 @@
+<form name="container-form" class="nt-4" method="POST" action="/courses/handle-form-actions-trash">
+    <div style="display: flex; justify-content: space-between;">
+        <h3>Trash</h3>
+        <a href="/me/stored/courses" class="btn btn-dark">List of courses</a>
+    </div>
+
+    <div class="mt-4 d-flex align-items-center">
+        <select class="form-select form-select-sm checkbox-select-all-options" name="action" required>
+            <option value="">-- Select action --</option>
+            <option value="restore">Restore</option>
+            <option value="delete">Delete</option>
+        </select>
+        <button class="check-all-submit-btn btn btn-success btn-sm disabled">Apply</button>
+    </div>
+
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                </th>
+                <th scope="col">
+                    {{sortable '_id' _sort}}
+                    ID
+                </th>
+                <th scope="col">
+                    {{sortable 'name' _sort}}
+                    Name
+                </th>
+                <th scope="col">
+                    {{sortable 'level' _sort}}
+                    Level
+                </th>
+                <th scope="col" colspan="3">
+                    {{sortable 'deletedAt' _sort}}
+                    Deleted at
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{#each courses}}
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="courseIds[]" value="{{this._id}}">
+                    </div>
+                </td>
+                <th scope="row">{{this._id}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.level}}</td>
+                <td>{{this.deletedAt}}</td>
+                <td><a href="" class="btn btn-primary btn-restore" data-id="{{this._id}}">Restore</a></td>
+                <td><a href="" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-course-modal"
+                        data-id="{{this._id}}">
+                        Force delete
+                    </a>
+                </td>
+
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="5" class="text-center">
+                    Empty trash.
+                </td>
+            </tr>
+
+            {{/each}}
+        </tbody>
+    </table>
+</form>
+
+<div class="paginate">
+    <a class="btn btn-light btn-sm" href="/me/trash/courses">Paginate</a>
+</div>
+
+{{!-- Confirm delete course --}}
+<div class="modal" id="delete-course-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">System notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>This action can not be undone. Are you sure to delete this course permanently?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button id="btn-delete-course" type="button" class="btn btn-danger">Delete permanently!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Restore-form hidden --}}
+<form name="restore-course-form" method="POST"></form>
+<form name="delete-course-form" method="POST"></form>
+
+
+
+<script>
+    let courseId
+    //restore
+    const restoreForm = document.forms['restore-course-form']
+    const restoreBtns = document.querySelectorAll('.btn-restore')
+    restoreBtns.forEach(btn => btn.addEventListener('click', e => {
+        e.preventDefault()
+        courseId = e.target.dataset.id
+        restoreForm.action = '/courses/' + courseId + '/restore?_method=PATCH'
+        restoreForm.submit()
+    }))
+
+    //force delete
+    const deleteForm = document.forms['delete-course-form']
+    const deleteCourseModal = document.getElementById('delete-course-modal')
+    deleteCourseModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget
+        courseId = button.dataset.id
+    })
+    const btnDeleteCourse = document.getElementById('btn-delete-course')
+    btnDeleteCourse.addEventListener('click', e => {
+        deleteForm.action = '/courses/' + courseId + '/force?_method=DELETE'
+        deleteForm.submit()
+    })
+
+
+    //Check all
+    const checkboxAll = document.getElementById('checkbox-all')
+    const courseItemCheckbox = document.querySelectorAll('[name="courseIds[]"]')
+    const checkAllSubmitBtn = document.querySelector('.check-all-submit-btn')
+
+    // -->
+    checkboxAll.onchange = (e) => {
+        let isCheckedAll = e.target.checked
+        courseItemCheckbox.forEach(item => item.checked = isCheckedAll)
+        renderCheckAllSubmitBtn()
+    }
+    courseItemCheckbox.forEach(item => {
+        item.onchange = () => {
+            let isCheckedAll = courseItemCheckbox.length === document.querySelectorAll('[name="courseIds[]"]:checked').length
+            checkboxAll.checked = isCheckedAll
+            renderCheckAllSubmitBtn()
+        }
+    })
+    // <--
+
+
+    function renderCheckAllSubmitBtn() {
+        const checkedCount = document.querySelectorAll('[name="courseIds[]"]:checked').length
+        if (checkedCount > 0) {
+            checkAllSubmitBtn.classList.remove('disabled')
+        } else {
+            checkAllSubmitBtn.classList.add('disabled')
+        }
+    }
+
+
+    const containerForm = document.forms['container-form']
+
+    //    checkAllSubmitBtn.onclick = e => {
+    //        e.preventDefault()
+    //        let isSubmittable = !e.target.classList.contains('disabled')
+    //        if (isSubmittable) {
+    //            containerForm.submit()
+    //        }
+    //    }
+    containerForm.onsubmit = e => {
+        let isSubmittable = !e.target.classList.contains('disabled')
+        if (!isSubmittable) {
+            e.preventDefault()
+        }
+    }
+
+</script>
