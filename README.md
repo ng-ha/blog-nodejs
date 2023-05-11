@@ -1,4 +1,4 @@
-## A express server with Handlebars template engine 📝
+## A express server with `Handlebars` template engine 📝
 
 ![blognode](./github-images/blognode.png)
 
@@ -8,11 +8,11 @@
 
 ### Technologies ✨
 
-- NodeJs
-- ExpressJs
-- Express-handlebars
-- MongoBD with mongoose
-- Docker
+- `NodeJs`
+- `ExpressJs`
+- `Express-handlebars`
+- MongoBD with `mongoose`
+- `Docker`
 
 ### License :right_anger_bubble:
 
