@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/nguyenha1111/nodejs_blog#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-handlebars": "^6.0.6",
     "method-override": "^3.0.0",
