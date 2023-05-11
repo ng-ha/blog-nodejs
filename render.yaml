@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: blognode
+    env: docker
+    plan: free
+    region: singapore
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
