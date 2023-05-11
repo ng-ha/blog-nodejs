@@ -7,7 +7,6 @@ const methodOverride = require('method-override');
 const sortMiddleWare = require('./app/middlewares/sortMiddleware');
 
 const app = express();
-const port = 3000;
 
 const route = require('./routes');
 
@@ -51,6 +50,6 @@ app.set('views', path.join(__dirname, 'resources', 'views'));
 route(app);
 
 // 127.0.0.1 - localhost
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`App listening on port ${process.env.PORT || 3000}`);
 });
