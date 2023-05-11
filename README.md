@@ -1,4 +1,4 @@
-# A ExpressJs server with Handlebars template engine 📝
+## A express server with Handlebars template engine 📝
 
 ![blognode](./github-images/blognode.png)
 
